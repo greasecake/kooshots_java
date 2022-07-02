@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: kooshots
+  datasource:
+    driver-class-name: 
+    url: 
+    username: 
+    password: 
+google-doc:
+  id: 
+  range: 
+  token: 
+  url: 
+telegram:
+  api-url: https://api.telegram.org/
+  webhook-path: 
+  bot-token: 
+  bot-name: 
+  chat-ids: 
+  admin-id: 
+  bot-id: 
