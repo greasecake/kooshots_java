@@ -18,23 +18,26 @@ public class MapLink extends AbstractEntity {
         return place;
     }
 
-    public void setPlace(Place placeId) {
-        this.place = placeId;
-    }
-
+    @Column(name = "yandex")
     public String getYandex() {
         return yandex;
     }
 
-    public void setYandex(String yandex) {
-        this.yandex = yandex;
-    }
-
+    @Column(name = "google")
     public String getGoogle() {
         return google;
     }
 
+
     public void setGoogle(String google) {
         this.google = google;
+    }
+
+    public void setPlace(Place placeId) {
+        this.place = placeId;
+    }
+
+    public void setYandex(String yandex) {
+        this.yandex = yandex;
     }
 }

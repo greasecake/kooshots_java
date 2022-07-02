@@ -1,12 +1,20 @@
 package com.greasecake.kooshots.bot;
 
 import com.greasecake.kooshots.controller.KooshotsController;
+import com.greasecake.kooshots.entity.Log;
 import com.greasecake.kooshots.entity.Place;
 import com.greasecake.kooshots.model.PlaceCallback;
 import com.greasecake.kooshots.model.PlacesRequest;
+import com.greasecake.kooshots.repository.LogRepository;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -26,18 +34,26 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class KooshotsBot extends TelegramLongPollingBot {
     @Autowired
     KooshotsController controller;
 
+    @Autowired
+    LogRepository logRepository;
+
     @Value("${telegram.bot-token}")
     private String botToken;
     @Value("${telegram.bot-name}")
     private String botUserName;
+    @Value("${telegram.admin-id}")
+    private String adminId;
 
     @Override
     public String getBotUsername() {
@@ -51,6 +67,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        String result = "";
         if (update.hasMessage() || update.hasCallbackQuery()) {
             Message message = new Message();
             Double userLatitude = null;
@@ -62,10 +79,18 @@ public class KooshotsBot extends TelegramLongPollingBot {
                 if (message.getLocation() == null) {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setChatId(message.getChatId().toString());
-                    if (message.getText().equals("Как отправить другое местоположение?")) {
+                    if (message.getText().equals("/logs") && isAdmin(message)) {
+                        Pageable pageable = PageRequest.of(0, 10, Sort.by("datetime").descending());
+                        Page<Log> logEntries = logRepository.findAll(pageable);
+                        if (logEntries.hasContent()) {
+                            sendMessage.setText(logEntries.getContent().stream().map(Object::toString).collect(Collectors.joining("\n")));
+                        }
+                    } else if (message.getText().equals("Как отправить другое местоположение?")) {
                         sendMessage.setText("Нажмите на скрепочку рядом с полем ввода сообщения и укажите местоположение вручную");
+                        result = "sent text";
                     } else {
                         sendMessage.setText("Чтобы получить список ближайших мест, поделитесь вашим местоположением");
+                        result = "sent text";
                     }
 
                     List<KeyboardRow> buttonRows = new ArrayList<>();
@@ -86,6 +111,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
 
                     ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
                     replyKeyboard.setKeyboard(buttonRows);
+                    replyKeyboard.setResizeKeyboard(true);
                     sendMessage.setReplyMarkup(replyKeyboard);
                     try {
                         execute(sendMessage);
@@ -97,8 +123,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
                     userLatitude = update.getMessage().getLocation().getLatitude();
                     userLongitude = update.getMessage().getLocation().getLongitude();
                 }
-            }
-            else if (update.hasCallbackQuery()) {
+            } else if (update.hasCallbackQuery()) {
                 message = update.getCallbackQuery().getMessage();
                 PlaceCallback callback = new PlaceCallback(update.getCallbackQuery().getData());
                 userLatitude = callback.getLatitude();
@@ -113,17 +138,13 @@ public class KooshotsBot extends TelegramLongPollingBot {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setChatId(message.getChatId().toString());
                     sendMessage.setText("Пока можем показать только заведения в пределах Санкт-Петербурга 😕");
-                    try{
+                    try {
                         execute(sendMessage);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
                     return;
                 }
-
-//                        60.050466, 30.030409
-
-//                59.805652, 30.565505
                 PlacesRequest request = new PlacesRequest();
                 request.setLatitude(userLatitude);
                 request.setLongitude(userLongitude);
@@ -137,7 +158,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
 
                 List<List<InlineKeyboardButton>> buttonRow = new ArrayList<>();
                 List<InlineKeyboardButton> buttonColumn = new ArrayList<>();
-                if (index+1 == places.getNumberOfElements()) {
+                if (index + 1 == places.getNumberOfElements()) {
                     PlaceCallback callback = new PlaceCallback();
                     callback.setLatitude(userLatitude);
                     callback.setLongitude(userLongitude);
@@ -169,11 +190,22 @@ public class KooshotsBot extends TelegramLongPollingBot {
                 if (keyboardMarkup.getKeyboard() != null) sendPhoto.setReplyMarkup(keyboardMarkup);
                 try {
                     execute(sendPhoto);
+                    result = "sent places";
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
 
-                index ++;
+                index++;
+            }
+            if (!result.isEmpty()) {
+                Log logEntry = new Log();
+                logEntry.setChatId(message.getChatId());
+                logEntry.setDatetime(new Timestamp(System.currentTimeMillis()));
+                logEntry.setUsername(message.getChat().getUserName());
+                logEntry.setLatitude(userLatitude);
+                logEntry.setLongitude(userLongitude);
+                logEntry.setResult(result);
+                logRepository.save(logEntry);
             }
         }
     }
@@ -201,4 +233,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
                 place.getDescription() + "\n";
     }
 
+    private boolean isAdmin(Message message) {
+        return message.getChatId().equals(Long.valueOf(adminId));
+    }
 }

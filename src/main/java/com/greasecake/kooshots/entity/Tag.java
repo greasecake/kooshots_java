@@ -16,21 +16,14 @@ public class Tag extends AbstractEntity {
         this.name = name;
     }
 
-    @Column(unique = true)
+    @Column(name = "name", unique = true)
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @Column(name = "description")
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @ManyToMany
@@ -42,7 +35,16 @@ public class Tag extends AbstractEntity {
         return places;
     }
 
+
     public void setPlaces(Set<Place> places) {
         this.places = places;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -17,45 +17,27 @@ public class Place extends AbstractEntity {
     private MapLink mapLink;
     private Set<Tag> tags;
 
-    @Column(unique = true)
-    public String getName() {
-        return name;
-    }
+    @Column(name = "name", unique = true)
+    public String getName() { return name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    @Column(name = "address")
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
+    @Column(name = "latitude")
     public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
+    @Column(name = "longitude")
     public Double getLongitude() {
         return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 
     @Column(name = "photo_url")
@@ -63,17 +45,9 @@ public class Place extends AbstractEntity {
         return photoUrl;
     }
 
-    public void setPhotoUrl(String photo) {
-        this.photoUrl = photo;
-    }
-
     @OneToOne(mappedBy = "place", cascade = CascadeType.ALL)
     public MapLink getMapLink() {
         return mapLink;
-    }
-
-    public void setMapLink(MapLink links) {
-        this.mapLink = links;
     }
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -85,7 +59,36 @@ public class Place extends AbstractEntity {
         return tags;
     }
 
+
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public void setMapLink(MapLink links) {
+        this.mapLink = links;
+    }
+
+    public void setPhotoUrl(String photo) {
+        this.photoUrl = photo;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
