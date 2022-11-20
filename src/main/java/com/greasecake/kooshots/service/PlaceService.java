@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -55,32 +54,38 @@ public class PlaceService {
         mapLinksRepository.deleteAll();
         List<Place> places = new ArrayList<>();
         for (ResponseRow row : rows.getValues()) {
-            Set<Tag> tags = new HashSet<>();
-            Place place = new Place();
-            List<String> tagNames = Arrays.stream(row.getTags().split(","))
-                    .map(String::strip).filter(str -> !str.matches("\\s*"))
-                    .collect(Collectors.toList());
-            for (String tagName : tagNames) {
-                tags.add(tagRepository.findByName(tagName) == null ? new Tag(tagName) : tagRepository.findByName(tagName));
+            try {
+                Set<Tag> tags = new HashSet<>();
+                Place place = new Place();
+                List<String> tagNames = Arrays.stream(row.getTags().split(","))
+                        .map(String::strip).filter(str -> !str.matches("\\s*"))
+                        .collect(Collectors.toList());
+                for (String tagName : tagNames) {
+                    tags.add(tagRepository.findByName(tagName) == null ? new Tag(tagName) : tagRepository.findByName(tagName));
+                }
+                List<Double> coordinates = formatCoordinates(row.getCoordinates());
+                place.setId(row.getId());
+                place.setName(row.getName());
+                place.setDescription(row.getDescription());
+                place.setAddress(row.getAddress());
+                place.setLatitude(coordinates.get(0));
+                place.setLongitude(coordinates.get(1));
+                place.setPhotoUrl(row.getPhoto());
+                place.setTags(tags);
+                place = placeRepository.save(place);
+
+                MapLink mapLink = new MapLink();
+                mapLink.setYandex(row.getYandexLink());
+                mapLink.setGoogle(row.getGoogleLink());
+                mapLink.setGis(row.getGisLink());
+                mapLink.setPlace(place);
+                mapLinksRepository.save(mapLink);
+                place.setMapLink(mapLink);
+
+                places.add(place);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
-            List<Double> coordinates = formatCoordinates(row.getCoordinates());
-            place.setName(row.getName());
-            place.setDescription(row.getDescription());
-            place.setAddress(row.getAddress());
-            place.setLatitude(coordinates.get(0));
-            place.setLongitude(coordinates.get(1));
-            place.setPhotoUrl(row.getPhoto());
-            place.setTags(tags);
-            place = placeRepository.save(place);
-
-            MapLink mapLink = new MapLink();
-            mapLink.setYandex(row.getYandexLink());
-            mapLink.setGoogle(row.getGoogleLink());
-            mapLink.setPlace(place);
-            mapLinksRepository.save(mapLink);
-            place.setMapLink(mapLink);
-
-            places.add(place);
         }
         return places;
     }

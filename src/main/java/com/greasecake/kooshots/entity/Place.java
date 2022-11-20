@@ -1,13 +1,12 @@
 package com.greasecake.kooshots.entity;
 
-import org.hibernate.annotations.Formula;
-
 import javax.persistence.*;
 import java.util.Set;
 
 @Table
 @Entity(name = "places")
-public class Place extends AbstractEntity {
+public class Place {
+    private String id;
     private String name;
     private String description;
     private String address;
@@ -17,30 +16,34 @@ public class Place extends AbstractEntity {
     private MapLink mapLink;
     private Set<Tag> tags;
 
-    @Column(name = "name", unique = true)
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    public String getId() { return id; }
+
+    @Column(name = "name", unique = true, nullable = false)
     public String getName() { return name; }
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     public String getDescription() {
         return description;
     }
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     public String getAddress() {
         return address;
     }
 
-    @Column(name = "latitude")
+    @Column(name = "latitude", nullable = false)
     public Double getLatitude() {
         return latitude;
     }
 
-    @Column(name = "longitude")
+    @Column(name = "longitude", nullable = false)
     public Double getLongitude() {
         return longitude;
     }
 
-    @Column(name = "photo_url")
+    @Column(name = "photo_url", nullable = false)
     public String getPhotoUrl() {
         return photoUrl;
     }
@@ -90,5 +93,9 @@ public class Place extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

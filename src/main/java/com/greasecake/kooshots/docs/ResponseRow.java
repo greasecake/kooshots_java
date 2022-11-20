@@ -3,6 +3,7 @@ package com.greasecake.kooshots.docs;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ResponseRow {
+    private String id;
     private String name;
     private String tags;
     private String description;
@@ -13,6 +14,8 @@ public class ResponseRow {
     private String googleLink;
     @JsonProperty("yandex_link")
     private String yandexLink;
+    @JsonProperty("2gis_link")
+    private String gisLink;
 
     public String getName() {
         return name;
@@ -76,5 +79,21 @@ public class ResponseRow {
 
     public void setYandexLink(String yandexLink) {
         this.yandexLink = yandexLink;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getGisLink() {
+        return gisLink;
+    }
+
+    public void setGisLink(String gisLink) {
+        this.gisLink = gisLink;
     }
 }
