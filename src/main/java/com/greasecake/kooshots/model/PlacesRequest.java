@@ -1,12 +1,19 @@
 package com.greasecake.kooshots.model;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-
 public class PlacesRequest {
-    Pageable pageable;
     Double latitude;
     Double longitude;
-    Integer distance;
+    Integer pageIndex;
+    Integer pageSize;
+
+    public PlacesRequest() {}
+
+    public PlacesRequest(Double latitude, Double longitude, Integer pageIndex, Integer pageSize) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pageIndex = pageIndex;
+        this.pageSize = pageSize;
+    }
 
     public Double getLatitude() {
         return latitude;
@@ -24,11 +31,19 @@ public class PlacesRequest {
         this.longitude = longitude;
     }
 
-    public Integer getDistance() {
-        return distance;
+    public Integer getPageIndex() {
+        return pageIndex;
     }
 
-    public void setDistance(Integer distance) {
-        this.distance = distance;
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

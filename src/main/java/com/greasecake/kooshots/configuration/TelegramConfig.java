@@ -1,7 +1,6 @@
 package com.greasecake.kooshots.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -12,6 +11,8 @@ public class TelegramConfig {
     private String botToken;
     @Value("${telegram.bot-name}")
     private String botUserName;
+    @Value("${telegram.admin-id}")
+    private Long adminId;
 
     public String getBotWebhookPath() {
         return botWebhookPath;
@@ -23,5 +24,9 @@ public class TelegramConfig {
 
     public String getBotUserName() {
         return botUserName;
+    }
+
+    public Long getAdminId() {
+        return adminId;
     }
 }

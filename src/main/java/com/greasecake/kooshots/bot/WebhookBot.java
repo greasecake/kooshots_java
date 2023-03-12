@@ -6,12 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException;
 
 import java.io.Serializable;
 
-public class KooshotsWebhookBot extends TelegramWebhookBot {
+public class WebhookBot extends TelegramWebhookBot {
     @Value("${telegram.webhook-path}")
     private String botWebhookPath;
     @Value("${telegram.bot-token}")
@@ -41,19 +39,19 @@ public class KooshotsWebhookBot extends TelegramWebhookBot {
                 e.printStackTrace();
             }
         }
-        return new BotApiMethod<Serializable>() {
+        return new BotApiMethod<>() {
             @Override
             public String getMethod() {
                 return null;
             }
 
             @Override
-            public Serializable deserializeResponse(String answer) throws TelegramApiRequestException {
+            public Serializable deserializeResponse(String answer) {
                 return null;
             }
 
             @Override
-            public void validate() throws TelegramApiValidationException {
+            public void validate() {
 
             }
         };

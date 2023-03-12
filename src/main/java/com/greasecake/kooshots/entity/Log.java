@@ -1,8 +1,5 @@
 package com.greasecake.kooshots.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

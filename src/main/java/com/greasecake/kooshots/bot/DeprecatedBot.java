@@ -1,21 +1,17 @@
 package com.greasecake.kooshots.bot;
 
-import com.greasecake.kooshots.controller.KooshotsController;
+import com.greasecake.kooshots.controller.BotController;
 import com.greasecake.kooshots.entity.Log;
 import com.greasecake.kooshots.entity.Place;
-import com.greasecake.kooshots.model.PlaceCallback;
+import com.greasecake.kooshots.model.callback.LocationCallback;
 import com.greasecake.kooshots.model.PlacesRequest;
 import com.greasecake.kooshots.repository.LogRepository;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,9 +19,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -37,13 +31,13 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Component
-public class KooshotsBot extends TelegramLongPollingBot {
+// DEPRECATED
+//@Component
+public class DeprecatedBot extends TelegramLongPollingBot {
     @Autowired
-    KooshotsController controller;
+    BotController controller;
 
     @Autowired
     LogRepository logRepository;
@@ -123,12 +117,13 @@ public class KooshotsBot extends TelegramLongPollingBot {
                     userLatitude = update.getMessage().getLocation().getLatitude();
                     userLongitude = update.getMessage().getLocation().getLongitude();
                 }
-            } else if (update.hasCallbackQuery()) {
+            } else if (update.hasCallbackQuery()) //noinspection CommentedOutCode
+            {
                 message = update.getCallbackQuery().getMessage();
-                PlaceCallback callback = new PlaceCallback(update.getCallbackQuery().getData());
-                userLatitude = callback.getLatitude();
-                userLongitude = callback.getLongitude();
-                pageNum = callback.getPageIndex();
+//                LocationCallback callback = new LocationCallback(update.getCallbackQuery().getData());
+//                userLatitude = callback.getLatitude();
+//                userLongitude = callback.getLongitude();
+//                pageNum = callback.getPageIndex();
             }
 
             Page<Place> places = Page.empty();
@@ -148,8 +143,8 @@ public class KooshotsBot extends TelegramLongPollingBot {
                 PlacesRequest request = new PlacesRequest();
                 request.setLatitude(userLatitude);
                 request.setLongitude(userLongitude);
-                request.setDistance(300);
-                places = controller.findByLocation(request, pageNum);
+                request.setPageIndex(pageNum);
+                places = controller.findByLocation(request);
             }
 
             int index = 0;
@@ -159,7 +154,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
                 List<List<InlineKeyboardButton>> buttonRow = new ArrayList<>();
                 List<InlineKeyboardButton> buttonColumn = new ArrayList<>();
                 if (index + 1 == places.getNumberOfElements()) {
-                    PlaceCallback callback = new PlaceCallback();
+                    LocationCallback callback = new LocationCallback();
                     callback.setLatitude(userLatitude);
                     callback.setLongitude(userLongitude);
 
@@ -168,6 +163,7 @@ public class KooshotsBot extends TelegramLongPollingBot {
                         prevButton.setText("Предыдущие 3");
                         callback.setPageIndex(places.getPageable().getPageNumber() - 1);
                         prevButton.setCallbackData(callback.toString());
+
                         buttonColumn.add(prevButton);
                     }
 

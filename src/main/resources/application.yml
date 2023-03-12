@@ -2,20 +2,23 @@ spring:
   application:
     name: kooshots
   datasource:
-    driver-class-name: 
-    url: 
-    username: 
-    password: 
+    driver-class-name:
+    url:
+    username:
+    password:
+  messages:
+    encoding: UTF-8
+    use-code-as-default-message: true
+    cache-duration: 0
 google-doc:
   id: 
   range: 
   token: 
   url: 
 telegram:
-  api-url: https://api.telegram.org/
-  webhook-path: 
-  bot-token: 
-  bot-name: 
-  chat-ids: 
-  admin-id: 
-  bot-id: 
+  webhook-path:
+  bot-token:
+  bot-name:
+  moder-ids:
+  admin-id:
+  bot-id:

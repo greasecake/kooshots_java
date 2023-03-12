@@ -15,12 +15,31 @@ public class Place {
     private String photoUrl;
     private MapLink mapLink;
     private Set<Tag> tags;
+    private Double distance;
+
+    public Place() {}
+
+    public Place(Place place, Integer distance) {
+        this(place, Double.valueOf(distance));
+    }
+
+    public Place(Place place, Double distance) {
+        this.name = place.name;
+        this.description = place.description;
+        this.address = place.address;
+        this.latitude = place.latitude;
+        this.longitude = place.longitude;
+        this.photoUrl = place.photoUrl;
+        this.mapLink = place.mapLink;
+        this.tags = place.tags;
+        this.distance = distance;
+    }
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
     public String getId() { return id; }
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     public String getName() { return name; }
 
     @Column(name = "description", nullable = false)
@@ -62,6 +81,10 @@ public class Place {
         return tags;
     }
 
+    @Transient
+    public Double getDistance() {
+        return distance;
+    }
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
@@ -97,5 +120,9 @@ public class Place {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 }

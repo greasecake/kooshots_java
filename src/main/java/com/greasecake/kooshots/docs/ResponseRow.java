@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ResponseRow {
     private String id;
+    private String hide;
     private String name;
     private String tags;
     private String description;
@@ -95,5 +96,13 @@ public class ResponseRow {
 
     public void setGisLink(String gisLink) {
         this.gisLink = gisLink;
+    }
+
+    public String getHide() {
+        return hide;
+    }
+
+    public void setHide(String hide) {
+        this.hide = hide;
     }
 }

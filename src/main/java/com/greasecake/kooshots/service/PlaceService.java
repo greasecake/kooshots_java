@@ -42,7 +42,7 @@ public class PlaceService {
         return Base64.getDecoder().decode(image);
     }
 
-    private List<Double> formatCoordinates(String coordinates) {
+    private static List<Double> formatCoordinates(String coordinates) {
         return Arrays.stream(coordinates.split(","))
                 .map(str -> new BigDecimal(str.strip()).setScale(6, RoundingMode.HALF_UP).doubleValue())
                 .collect(Collectors.toList());
@@ -55,6 +55,12 @@ public class PlaceService {
         List<Place> places = new ArrayList<>();
         for (ResponseRow row : rows.getValues()) {
             try {
+                if (row.getId().isEmpty()) {
+                    break;
+                }
+                if (Boolean.parseBoolean(row.getHide())) {
+                    continue;
+                }
                 Set<Tag> tags = new HashSet<>();
                 Place place = new Place();
                 List<String> tagNames = Arrays.stream(row.getTags().split(","))
@@ -90,8 +96,8 @@ public class PlaceService {
         return places;
     }
 
-    public Page<Place> findByLocation(PlacesRequest request, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 3);
-        return placeRepository.getPlacesByCoordinates(request.getLatitude(), request.getLongitude(), Double.valueOf(request.getDistance()), pageable);
+    public Page<Place> findByLocation(PlacesRequest request) {
+        Pageable pageable = PageRequest.of(request.getPageIndex(), 3);
+        return placeRepository.getPlacesByCoordinates(request.getLatitude(), request.getLongitude(), 300., pageable);
     }
 }
