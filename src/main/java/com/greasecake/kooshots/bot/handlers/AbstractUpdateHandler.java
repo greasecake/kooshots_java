@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors;
+package com.greasecake.kooshots.bot.handlers;
 
 import com.greasecake.kooshots.bot.SenderUtils;
 import com.greasecake.kooshots.service.ConversationStateService;

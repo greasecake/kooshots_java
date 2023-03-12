@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.greasecake.kooshots.bot;
 
-import com.greasecake.kooshots.bot.processors.UpdateHandlerSelector;
+import com.greasecake.kooshots.bot.handlers.UpdateHandlerSelector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

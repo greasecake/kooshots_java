@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors;
+package com.greasecake.kooshots.bot.handlers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

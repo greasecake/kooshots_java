@@ -1,6 +1,6 @@
-package com.greasecake.kooshots.bot.processors.location;
+package com.greasecake.kooshots.bot.handlers.location;
 
-import com.greasecake.kooshots.bot.processors.AbstractUpdateHandler;
+import com.greasecake.kooshots.bot.handlers.AbstractUpdateHandler;
 import com.greasecake.kooshots.entity.Place;
 import com.greasecake.kooshots.model.PlacesRequest;
 import com.greasecake.kooshots.model.callback.LocationCallback;
@@ -74,19 +74,15 @@ public abstract class LocationHandler extends AbstractUpdateHandler {
             return;
         }
 
-        InlineKeyboardMarkup nextButton = null;
         Page<Place> places = placeService.findByLocation(new PlacesRequest(latitude, longitude, pageIndex, PAGE_SIZE));
-        int i = 1;
+        int placeNum = 1;
         for (Place place : places.getContent()) {
-            if (i == PAGE_SIZE && places.getTotalPages() > pageIndex) {
-                nextButton = buildNextButton(new LocationCallback(latitude, longitude, pageIndex));
-            }
-            i++;
             senderUtils.send(sender,
                     chatId,
                     composeMessage(place),
-                    nextButton,
+                    placeNum == PAGE_SIZE ? buildNextButton(new LocationCallback(latitude, longitude, pageIndex)) : null,
                     place.getPhotoUrl());
+            placeNum++;
         }
     }
 }

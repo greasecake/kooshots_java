@@ -1,7 +1,7 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 import com.greasecake.kooshots.bot.SenderUtils;
-import com.greasecake.kooshots.bot.processors.AbstractUpdateHandler;
+import com.greasecake.kooshots.bot.handlers.AbstractUpdateHandler;
 import com.greasecake.kooshots.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;

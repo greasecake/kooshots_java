@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -8,22 +8,16 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import javax.annotation.PostConstruct;
 
 @Component
-@Order(13)
-public class FeedbackCommandHandler extends CommandHandler {
+@Order(10)
+public class StartCommandHandler extends CommandHandler {
     @PostConstruct
     public void init() {
-        this.commandName = messageUtils.getMessage("button.feedback");
+        this.commandName = "/start";
     }
 
-    @Override
     public void handle(AbsSender sender, Update update) {
         senderUtils.send(sender,
                 update.getMessage().getChatId(),
-                messageUtils.getMessage("message.feedback.ready"));
-    }
-
-    @Override
-    public void updateConversationState(Update update) {
-        conversationStateService.setState(update.getMessage().getChatId(), "feedback.init");
+                messageUtils.getMessage("message.intro"));
     }
 }

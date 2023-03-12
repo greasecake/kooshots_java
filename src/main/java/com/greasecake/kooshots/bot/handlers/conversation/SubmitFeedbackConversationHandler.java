@@ -1,7 +1,7 @@
-package com.greasecake.kooshots.bot.processors.conversation;
+package com.greasecake.kooshots.bot.handlers.conversation;
 
-import com.greasecake.kooshots.bot.processors.AbstractUpdateHandler;
-import com.greasecake.kooshots.bot.processors.command.CommandDict;
+import com.greasecake.kooshots.bot.handlers.AbstractUpdateHandler;
+import com.greasecake.kooshots.bot.handlers.command.CommandDict;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;

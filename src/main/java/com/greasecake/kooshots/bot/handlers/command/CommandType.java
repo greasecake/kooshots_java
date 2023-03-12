@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 public enum CommandType {
     START,

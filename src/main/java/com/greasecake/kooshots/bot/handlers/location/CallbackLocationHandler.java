@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.location;
+package com.greasecake.kooshots.bot.handlers.location;
 
 import com.greasecake.kooshots.model.callback.CallbackFactory;
 import com.greasecake.kooshots.model.callback.LocationCallback;

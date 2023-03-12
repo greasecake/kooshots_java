@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 import com.greasecake.kooshots.configuration.TelegramConfig;
 import com.greasecake.kooshots.entity.Log;

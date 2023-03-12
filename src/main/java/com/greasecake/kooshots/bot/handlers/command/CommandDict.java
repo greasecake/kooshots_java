@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors.command;
+package com.greasecake.kooshots.bot.handlers.command;
 
 import com.greasecake.kooshots.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;

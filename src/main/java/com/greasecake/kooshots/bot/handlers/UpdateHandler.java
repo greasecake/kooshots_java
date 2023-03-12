@@ -1,4 +1,4 @@
-package com.greasecake.kooshots.bot.processors;
+package com.greasecake.kooshots.bot.handlers;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
