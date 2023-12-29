@@ -27,6 +27,7 @@ public class ConversationStateService {
     public void setState(long chatId, String state) {
         if (state == null) {
             resetState(chatId);
+            return;
         }
         ConversationState entry = repository.findByChatId(chatId);
         entry = entry == null ? new ConversationState() : entry;

@@ -1,7 +1,7 @@
 package com.greasecake.kooshots.bot;
 
 import com.greasecake.kooshots.controller.BotController;
-import com.greasecake.kooshots.entity.Log;
+import com.greasecake.kooshots.entity.log.Log;
 import com.greasecake.kooshots.entity.Place;
 import com.greasecake.kooshots.model.callback.LocationCallback;
 import com.greasecake.kooshots.model.PlacesRequest;
@@ -195,12 +195,12 @@ public class DeprecatedBot extends TelegramLongPollingBot {
             }
             if (!result.isEmpty()) {
                 Log logEntry = new Log();
-                logEntry.setChatId(message.getChatId());
-                logEntry.setDatetime(new Timestamp(System.currentTimeMillis()));
-                logEntry.setUsername(message.getChat().getUserName());
-                logEntry.setLatitude(userLatitude);
-                logEntry.setLongitude(userLongitude);
-                logEntry.setResult(result);
+//                logEntry.setChatId(message.getChatId());
+//                logEntry.setRequestDatetime(new Timestamp(System.currentTimeMillis()));
+//                logEntry.setUsername(message.getChat().getUserName());
+//                logEntry.setLatitude(userLatitude);
+//                logEntry.setLongitude(userLongitude);
+//                logEntry.setResult(result);
                 logRepository.save(logEntry);
             }
         }

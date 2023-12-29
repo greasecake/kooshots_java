@@ -1,6 +1,6 @@
 package com.greasecake.kooshots.service;
 
-import com.greasecake.kooshots.entity.Log;
+import com.greasecake.kooshots.entity.log.Log;
 import com.greasecake.kooshots.repository.LogRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

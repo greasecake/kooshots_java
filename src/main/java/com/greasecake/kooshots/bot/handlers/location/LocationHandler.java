@@ -5,6 +5,7 @@ import com.greasecake.kooshots.entity.Place;
 import com.greasecake.kooshots.model.PlacesRequest;
 import com.greasecake.kooshots.model.callback.LocationCallback;
 import com.greasecake.kooshots.service.PlaceService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringSubstitutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class LocationHandler extends AbstractUpdateHandler {
     @Autowired
@@ -39,13 +41,13 @@ public abstract class LocationHandler extends AbstractUpdateHandler {
     }
 
     private String buildMapLinks(Place place) {
-        return Map.of(
-                        "Яндекс", Optional.ofNullable(place.getMapLink().getYandex()),
-                        "Google", Optional.ofNullable(place.getMapLink().getGoogle()),
-                        "2ГИС", Optional.ofNullable(place.getMapLink().getGis()))
-                .entrySet().stream()
-                .filter(e -> e.getValue().isPresent())
-                .map(e -> String.format("[%s](%s)", e.getKey(), e.getValue().get())).collect(Collectors.joining(" | "));
+        return Stream.of(
+                        Pair.of("Яндекс", Optional.ofNullable(place.getMapLink().getYandex())),
+                        Pair.of("Google", Optional.ofNullable(place.getMapLink().getGoogle())),
+                        Pair.of("2ГИС", Optional.ofNullable(place.getMapLink().getGis())))
+                .filter(e -> e.getRight().isPresent())
+                .map(e -> String.format("[%s](%s)", e.getLeft(), e.getRight().get()))
+                .collect(Collectors.joining(" | "));
     }
 
     protected InlineKeyboardMarkup buildNextButton(LocationCallback callback) {
@@ -64,14 +66,14 @@ public abstract class LocationHandler extends AbstractUpdateHandler {
         return keyboardMarkup;
     }
 
-    protected void sendPlaces(AbsSender sender, long chatId, double latitude, double longitude, int pageIndex) {
+    protected List<Place> sendPlaces(AbsSender sender, long chatId, double latitude, double longitude, int pageIndex) {
         // TODO: add better location validation
         if (latitude > 60.050466 || latitude < 59.805652 ||
                 longitude > 30.565505 || longitude < 30.030409) {
             senderUtils.send(sender,
                     chatId,
                     messageUtils.getMessage("message.location_not_supported"));
-            return;
+            return null;
         }
 
         Page<Place> places = placeService.findByLocation(new PlacesRequest(latitude, longitude, pageIndex, PAGE_SIZE));
@@ -84,5 +86,6 @@ public abstract class LocationHandler extends AbstractUpdateHandler {
                     place.getPhotoUrl());
             placeNum++;
         }
+        return places.getContent();
     }
 }

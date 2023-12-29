@@ -1,6 +1,6 @@
 package com.greasecake.kooshots.repository;
 
-import com.greasecake.kooshots.entity.Log;
+import com.greasecake.kooshots.entity.log.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

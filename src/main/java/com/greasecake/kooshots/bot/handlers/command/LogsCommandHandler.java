@@ -1,7 +1,7 @@
 package com.greasecake.kooshots.bot.handlers.command;
 
 import com.greasecake.kooshots.configuration.TelegramConfig;
-import com.greasecake.kooshots.entity.Log;
+import com.greasecake.kooshots.entity.log.Log;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;

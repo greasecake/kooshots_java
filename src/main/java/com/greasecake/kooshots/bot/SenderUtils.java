@@ -2,6 +2,7 @@ package com.greasecake.kooshots.bot;
 
 import com.greasecake.kooshots.utils.MessageUtils;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -24,11 +25,11 @@ public class SenderUtils {
         this.messageUtils = messageUtils;
     }
 
-    public void send(AbsSender sender, Long chatId, String text, ReplyKeyboardMarkup markup) {
+    public void send(AbsSender sender, Long chatId, String text, ReplyKeyboardMarkup keyboard) {
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
-                .replyMarkup(markup)
+                .replyMarkup(keyboard)
                 .parseMode(ParseMode.MARKDOWN)
                 .build();
         try {
@@ -38,15 +39,28 @@ public class SenderUtils {
         }
     }
 
+    public void forward(AbsSender sender, Long chatId, Long fromChatId, Integer messageId) {
+        ForwardMessage forwardMessage = ForwardMessage.builder()
+                .chatId(chatId)
+                .fromChatId(fromChatId)
+                .messageId(messageId)
+                .build();
+        try {
+            sender.execute(forwardMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void send(AbsSender sender, Long chatId, String text) {
         send(sender, chatId, text, buildDefaultReplyKeyboard());
     }
 
-    public void send(AbsSender sender, Long chatId, String text, InlineKeyboardMarkup markup, String photoUrl) {
+    public void send(AbsSender sender, Long chatId, String text, InlineKeyboardMarkup keyboard, String photoUrl) {
         SendPhoto sendPhoto = SendPhoto.builder()
                 .chatId(chatId)
                 .caption(text)
-                .replyMarkup(markup)
+                .replyMarkup(keyboard)
                 .photo(new InputFile(photoUrl))
                 .parseMode(ParseMode.MARKDOWN)
                 .build();

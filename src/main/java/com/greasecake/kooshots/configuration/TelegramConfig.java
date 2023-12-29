@@ -13,6 +13,8 @@ public class TelegramConfig {
     private String botUserName;
     @Value("${telegram.admin-id}")
     private Long adminId;
+    @Value("-100${telegram.feedback-channel-id}")
+    private Long feedbackChannelId;
 
     public String getBotWebhookPath() {
         return botWebhookPath;
@@ -28,5 +30,13 @@ public class TelegramConfig {
 
     public Long getAdminId() {
         return adminId;
+    }
+
+    public Long getFeedbackChannelId() {
+        return feedbackChannelId;
+    }
+
+    public void setFeedbackChannelId(Long feedbackChannelId) {
+        this.feedbackChannelId = feedbackChannelId;
     }
 }
