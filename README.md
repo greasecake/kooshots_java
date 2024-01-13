@@ -3,15 +3,5 @@
 ## Stack
 - Java
 - Spring Boot
-- PostgreSQL + Redis + Spring Data
-- Kafka
+- PostgreSQL + Spring Data
 - Docker
-
-<details>
-  <summary>todo</summary>
-  <ul>
-  <li>Features</li>
-  <li>Setup</li>
-  <li>Screenshots, UMLs and graphics</li>
-  </ul>
-</details>
